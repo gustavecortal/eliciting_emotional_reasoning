@@ -1,0 +1,14 @@
+[project]
+name = "eliciting-emotional-reasoning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "datasets>=4.1.1",
+    "peft>=0.17.1",
+    "torch>=2.8.0",
+    "transformers>=4.56.2",
+    "trl>=0.23.1",
+    "wandb>=0.22.1",
+]
