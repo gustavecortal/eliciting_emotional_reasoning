@@ -65,15 +65,14 @@ def main() -> None:
     cfg = load_config("config.yaml")
     model_cfg = cfg["model"]
     training_cfg = cfg["training"]
-    soup_cfg = cfg["soup"]
-
-    output_dir = soup_cfg.get("output_dir") or training_cfg["orpo"]["output_dir"]
+    soup_cfg = training_cfg.get("soup", {})
+    output_dir = training_cfg.get("output_dir") or training_cfg["orpo"]["output_dir"]
     combination_types: List[str] = list(soup_cfg.get("combination_types", ["linear"]))
     weights_cfg = soup_cfg.get("weights")
     ties_density = float(soup_cfg.get("density", 0.2))
-    save_dir_root = soup_cfg.get("save_dir", "merged_models")
-    device_map = str(soup_cfg.get("device_map", "auto"))
-    torch_dtype = dtype_from_str(soup_cfg.get("torch_dtype", "bfloat16"))
+    save_dir_root = output_dir
+    device_map = str(training_cfg.get("device_map", "auto"))
+    torch_dtype = dtype_from_str(training_cfg.get("torch_dtype", "bfloat16"))
     trust_remote_code = bool(model_cfg.get("tokenizer_trust_remote_code", True))
 
     adapter_dirs = find_adapter_dirs(output_dir)

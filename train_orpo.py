@@ -41,8 +41,7 @@ def main() -> None:
 
     lora_params: Dict[str, Any] = training_cfg["lora"]
     orpo_params: Dict[str, Any] = training_cfg["orpo"]
-    save_model_path: str = training_cfg.get("save_model_path", orpo_params["output_dir"])
-
+    save_model_path: str = root_output_dir
     dtype_map = {
         "bfloat16": torch.bfloat16,
         "float16": torch.float16,
@@ -77,7 +76,7 @@ def main() -> None:
     )
 
     orpo_config = ORPOConfig(
-        output_dir=str(orpo_params["output_dir"]),
+        output_dir=str(root_output_dir),
         num_train_epochs=int(orpo_params["num_train_epochs"]),
         learning_rate=float(orpo_params["learning_rate"]),
         per_device_train_batch_size=int(orpo_params["per_device_train_batch_size"]),

@@ -14,8 +14,8 @@ training:
   device_map: auto
   allow_tf32: true
   lora:
-    r: 1
-    lora_alpha: 2
+    r: 4
+    lora_alpha: 8
     lora_dropout: 0.05
     bias: none
     task_type: CAUSAL_LM
@@ -28,11 +28,10 @@ training:
     - gate_proj
     - down_proj
   orpo:
-    output_dir: piaget-1.7b-test-a100
     num_train_epochs: 1
-    learning_rate: 5e-4
-    per_device_train_batch_size: 1
-    per_device_eval_batch_size: 1
+    learning_rate: 0.0005
+    per_device_train_batch_size: 8
+    per_device_eval_batch_size: 8
     gradient_accumulation_steps: 1
     logging_steps: 50
     eval_steps: 1000
@@ -47,14 +46,10 @@ training:
     - wandb
     warmup_steps: 500
     eval_strategy: steps
-  save_model_path: piaget1.7b-test-a100
-soup:
-  output_dir: null
-  combination_types:
-  - linear
-  - ties
-  weights: null
-  density: 0.2
-  save_dir: merged_models/piaget-1.7b-test-a100
-  torch_dtype: bfloat16
-  device_map: auto
+  output_dir: piaget-1.7b-test-a100
+  soup:
+    combination_types:
+    - linear
+    - ties
+    weights: null
+    density: 0.2
