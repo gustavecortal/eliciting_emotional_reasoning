@@ -1,4 +1,4 @@
-## Preference Optimization (ORPO) for LLMs using LoRA adapters
+## Lightweight preference optimization using ORPO and LoRA
 
 This repo fine-tunes Hugging Face models for preference optimization using ORPO + LoRA.
 
