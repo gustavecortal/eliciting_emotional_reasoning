@@ -1,16 +1,17 @@
-## Simple ORPO training with LoRA and model souping
+## Preference Optimization (ORPO) for LLMs using LoRA adapters
 
-This repository fine-tunes HuggingFace models using ORPO and LoRA. 
+This repo fine-tunes Hugging Face models for preference optimization using ORPO + LoRA.
 
-ORPO training pairs preferred vs. dispreferred completions and optimizes the odds ratio. 
+**ORPO (Odds Ratio Preference Optimization).** A reference-model-free preference objective: for each `(x, y⁺, y⁻)` pair, it adds a log-odds term that boosts the likelihood of the chosen response and penalizes the rejected one, so alignment happens in a single SFT-style stage (no PPO/DPO or separate ref model). ([arXiv][1])
 
-LoRA training adapts models by learning low-rank adapter weights that can be merged or swapped without touching the full model.
+**LoRA (Low-Rank Adaptation).** Keeps the pretrained weights frozen and learns tiny low-rank matrices on selected layers. These adapters are small, swappable, and can be merged into the base model for export. ([Hugging Face][2])
 
-- `prepare_dataset.py` — downloads a preference dataset, wraps it in chat format, filters by length, and saves it to disk. 
-
-- `train_orpo.py` — fine-tunes the model using ORPO and LORA.
-
-- `model_soup.py` — merges multiple LoRA checkpoints into a full model.
-
+* `prepare_dataset.py` — downloads a preference dataset, wraps it in chat format, filters by length, and saves to disk.
+* `train_orpo.py` — fine-tunes the model with ORPO + LoRA.
+* `model_soup.py` — merges multiple LoRA checkpoints into a full model.
 
 Usage: `python train_orpo.py --config configs/config_0.6b.yaml`
+
+[1]: https://arxiv.org/abs/2403.07691 "ORPO: Monolithic Preference Optimization without Reference Model"
+[2]: https://huggingface.co/docs/peft/main/en/developer_guides/lora
+
