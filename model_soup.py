@@ -5,6 +5,7 @@ import os
 import re
 from pathlib import Path
 from typing import Dict, Any, List
+import argparse
 
 import torch
 import yaml
@@ -59,10 +60,33 @@ def save_merged(model, tokenizer, save_dir: str) -> None:
     model.save_pretrained(save_dir)
     tokenizer.save_pretrained(save_dir)
 
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="Train ORPO with LoRA using a YAML-configured setup."
+    )
+    p.add_argument(
+        "-c",
+        "--config",
+        type=Path,
+        default=Path("config.yaml"),
+        help="Path to YAML config file (default: %(default)s)",
+    )
+    return p.parse_args()
+
 
 def main() -> None:
     """Run model soup merges as configured in config.yaml."""
-    cfg = load_config("config.yaml")
+
+    args = parse_args()
+    config_path: Path = args.config
+
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found: {config_path.resolve()}")
+    #config_path = "config.yaml"
+    cfg = load_config(str(config_path))
+    print(f"Launch {cfg}...")
+    
+    #cfg = load_config("config.yaml")
     model_cfg = cfg["model"]
     training_cfg = cfg["training"]
     soup_cfg = training_cfg.get("soup", {})
@@ -71,7 +95,7 @@ def main() -> None:
     weights_cfg = soup_cfg.get("weights")
     ties_density = float(soup_cfg.get("density", 0.2))
     save_dir_root = output_dir
-    device_map = str(training_cfg.get("device_map", "auto"))
+    device_map = 'cuda:0' #str(training_cfg.get("device_map", "auto"))
     torch_dtype = dtype_from_str(training_cfg.get("torch_dtype", "bfloat16"))
     trust_remote_code = bool(model_cfg.get("tokenizer_trust_remote_code", True))
 
@@ -96,7 +120,7 @@ def main() -> None:
     # Do each requested merge independently
     for comb in combination_types:
         comb = str(comb).lower().strip()
-        if comb not in {"linear", "ties"}:
+        if comb not in {"linear", "dare_ties"}:
             print(f"Skipping unsupported combination_type: {comb}")
             continue
 
@@ -104,7 +128,7 @@ def main() -> None:
 
         merged_adapter_name = f"merge_{comb}"
         add_kwargs: Dict[str, Any] = {}
-        if comb == "ties":
+        if comb == "dare_ties":
             add_kwargs["density"] = ties_density
 
         model.add_weighted_adapter(
