@@ -13,7 +13,7 @@ From my experiments, ORPO + LoRA works well and benefits from model souping (ave
 Usage: `python train_orpo.py --config configs/config_0.6b.yaml`
 
 
-### What is ORPO and LoRA?
+### What are ORPO and LoRA?
 
 **ORPO (Odds Ratio Preference Optimization).** A reference-model-free preference objective: for each `(x, y⁺, y⁻)` pair, it adds a log-odds term that boosts the likelihood of the chosen response and penalizes the rejected one, so alignment happens in a single SFT-style stage (no PPO/DPO or separate ref model). ([arXiv][1])
 
