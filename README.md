@@ -3,7 +3,8 @@
 This repo fine-tunes Hugging Face models for preference optimization using ORPO + LoRA.
 
 If you want the cheapest way to align an LLM without a reference model, you are in the right place.
-Using LoRA with a small rank, if you have enough compute for inference, then you probably have enough for fine-tuning.
+Using LoRA with a small rank, **if you have enough compute for inference, then you probably have enough for fine-tuning**.
+
 From my experiments, ORPO + LoRA works well and benefits from model souping (averaging checkpoints).
 
 * `prepare_dataset.py` — downloads a preference dataset, wraps it in chat format, filters by length, and saves to disk.
